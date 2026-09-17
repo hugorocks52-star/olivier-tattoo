@@ -1,12 +1,14 @@
 'use client'
 
 import { useState, useRef, useCallback, useEffect } from 'react'
+import Link from 'next/link'
 import {
   Upload, Camera, Download, Send, RotateCcw, RotateCw,
   FlipHorizontal, FlipVertical, Minus, Plus, Eye, EyeOff,
-  Eraser, Undo2, Redo2, RefreshCcw, AlertCircle, Info
+  Undo2, Redo2, RefreshCcw, Info
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
+import { Reveal } from '@/components/motion/reveal'
 
 interface Transform {
   x: number
@@ -48,7 +50,6 @@ export function VirtualTryon() {
   const [isDragging, setIsDragging] = useState(false)
   const [dragStart, setDragStart] = useState({ x: 0, y: 0 })
   const [activeTab, setActiveTab] = useState<'transform' | 'appearance' | 'tools'>('transform')
-  const [isEraserActive, setIsEraserActive] = useState(false)
   const [step, setStep] = useState<1 | 2 | 3>(1)
 
   const bodyInputRef = useRef<HTMLInputElement>(null)
@@ -222,26 +223,10 @@ export function VirtualTryon() {
   }
 
   return (
-    <section id="essayage" className="py-24 lg:py-32 bg-background">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Header */}
-        <div className="mb-12">
-          <div className="flex items-center gap-3 mb-4">
-            <div className="h-px w-12 bg-gold opacity-70" aria-hidden="true" />
-            <span className="text-gold text-xs tracking-[0.3em] uppercase font-medium">Outil interactif</span>
-          </div>
-          <h2 className="font-serif text-4xl lg:text-5xl font-bold text-foreground mb-4 text-balance">
-            Essayez votre tatouage<br />avant de vous lancer
-          </h2>
-          <p className="text-muted-foreground text-lg max-w-2xl leading-relaxed">
-            Importez une photo de votre corps et le motif souhaité pour visualiser le rendu en temps réel.
-            Déplacez, redimensionnez et ajustez librement.
-          </p>
-        </div>
-
+    <Reveal>
         {/* Disclaimer */}
-        <div className="flex items-start gap-3 p-4 bg-gold/5 border border-gold/20 mb-10 max-w-3xl">
-          <Info size={16} className="text-gold mt-0.5 flex-shrink-0" />
+        <div className="flex items-start gap-3 p-4 bg-gold/5 border border-gold/20 mb-10 max-w-3xl w-full">
+          <Info size={16} className="text-gold mt-0.5 shrink-0" />
           <p className="text-muted-foreground text-sm leading-relaxed">
             <strong className="text-foreground">Simulation visuelle uniquement.</strong> Le rendu réel d&apos;un tatouage sur la peau peut différer
             de cette prévisualisation, selon la texture et la couleur de votre peau, la zone du corps et la technique utilisée.
@@ -277,7 +262,7 @@ export function VirtualTryon() {
           <div className="flex-1 min-h-0">
             <div
               ref={containerRef}
-              className="relative bg-surface border border-border overflow-hidden"
+              className="media-frame relative bg-surface border border-border"
               style={{ height: '500px' }}
               onMouseMove={handleMouseMove}
               onMouseUp={handleMouseUp}
@@ -303,7 +288,7 @@ export function VirtualTryon() {
                     <div className="flex gap-3 mt-2">
                       <button
                         onClick={() => bodyInputRef.current?.click()}
-                        className="px-4 py-2 bg-primary text-primary-foreground text-sm tracking-wide hover:bg-primary/90 transition-colors"
+                        className="rounded-md px-4 py-2 bg-primary text-primary-foreground text-sm tracking-wide hover:bg-primary/90 transition-colors"
                       >
                         Importer une photo
                       </button>
@@ -335,12 +320,12 @@ export function VirtualTryon() {
 
               {/* Before/after label */}
               {showBefore && bodyImage && (
-                <div className="absolute top-3 left-3 bg-background/80 px-2 py-1 text-xs tracking-wider uppercase text-muted-foreground">
+                <div className="absolute top-3 left-3 rounded-md bg-background/80 px-2 py-1 text-xs tracking-wider uppercase text-muted-foreground">
                   Avant
                 </div>
               )}
               {!showBefore && bodyImage && tattooImage && (
-                <div className="absolute top-3 left-3 bg-primary/80 px-2 py-1 text-xs tracking-wider uppercase text-primary-foreground">
+                <div className="absolute top-3 left-3 rounded-md bg-primary/80 px-2 py-1 text-xs tracking-wider uppercase text-primary-foreground">
                   Après
                 </div>
               )}
@@ -575,17 +560,17 @@ export function VirtualTryon() {
                     <button
                       onClick={handleExport}
                       disabled={!bodyImage}
-                      className="w-full py-2.5 text-xs bg-primary text-primary-foreground hover:bg-primary/90 disabled:opacity-40 disabled:cursor-not-allowed transition-colors flex items-center justify-center gap-1.5"
+                      className="rounded-md w-full py-2.5 text-xs bg-primary text-primary-foreground hover:bg-primary/90 disabled:opacity-40 disabled:cursor-not-allowed transition-colors flex items-center justify-center gap-1.5"
                     >
                       <Download size={13} /> Enregistrer l&apos;aperçu
                     </button>
 
-                    <button
-                      onClick={() => document.getElementById('rendez-vous')?.scrollIntoView({ behavior: 'smooth' })}
-                      className="w-full py-2.5 text-xs bg-gold text-background hover:bg-gold/90 transition-colors flex items-center justify-center gap-1.5 font-medium"
+                    <Link
+                      href="/rendez-vous"
+                      className="rounded-md w-full py-2.5 text-xs bg-gold text-background hover:bg-gold/90 transition-colors flex items-center justify-center gap-1.5 font-medium"
                     >
                       <Send size={13} /> Envoyer mon projet au salon
-                    </button>
+                    </Link>
                   </>
                 )}
               </div>
@@ -629,7 +614,6 @@ export function VirtualTryon() {
           onChange={(e) => { const f = e.target.files?.[0]; if (f) handleTattooUpload(f) }}
           aria-label="Importer un motif de tatouage"
         />
-      </div>
-    </section>
+    </Reveal>
   )
 }

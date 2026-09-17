@@ -1,6 +1,6 @@
 @import 'tailwindcss';
+@import '@heroui/styles';
 @import 'tw-animate-css';
-@import 'shadcn/tailwind.css';
 
 @custom-variant dark (&:is(.dark *));
 
@@ -9,139 +9,95 @@
   --font-sans: 'Inter', 'Inter Fallback', sans-serif;
   --font-serif: 'Playfair Display', 'Playfair Display Fallback', serif;
 
-  /* Colors */
+  /*
+   * Bridge Tailwind's utility color names (bg-primary, text-muted-foreground, …)
+   * onto the same variables HeroUI components read (--accent, --surface, --default, …)
+   * so hand-authored layout classes and HeroUI components share one palette.
+   */
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --color-card: var(--card);
-  --color-card-foreground: var(--card-foreground);
-  --color-popover: var(--popover);
-  --color-popover-foreground: var(--popover-foreground);
-  --color-primary: var(--primary);
-  --color-primary-foreground: var(--primary-foreground);
-  --color-secondary: var(--secondary);
-  --color-secondary-foreground: var(--secondary-foreground);
-  --color-muted: var(--muted);
-  --color-muted-foreground: var(--muted-foreground);
-  --color-accent: var(--accent);
-  --color-accent-foreground: var(--accent-foreground);
-  --color-destructive: var(--destructive);
+  --color-card: var(--surface);
+  --color-card-foreground: var(--surface-foreground);
+  --color-popover: var(--overlay);
+  --color-popover-foreground: var(--overlay-foreground);
+  --color-primary: var(--accent);
+  --color-primary-foreground: var(--accent-foreground);
+  --color-secondary: var(--default);
+  --color-secondary-foreground: var(--default-foreground);
+  --color-muted: var(--surface-secondary);
+  --color-muted-foreground: var(--muted);
+  --color-accent: var(--gold);
+  --color-accent-foreground: var(--gold-foreground);
+  --color-destructive: var(--danger);
   --color-border: var(--border);
-  --color-input: var(--input);
-  --color-ring: var(--ring);
+  --color-input: var(--field-background);
+  --color-ring: var(--focus);
   --color-gold: var(--gold);
   --color-gold-foreground: var(--gold-foreground);
   --color-surface: var(--surface);
 
-  --color-sidebar-ring: var(--sidebar-ring);
-  --color-sidebar-border: var(--sidebar-border);
-  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
-  --color-sidebar-accent: var(--sidebar-accent);
-  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
-  --color-sidebar-primary: var(--sidebar-primary);
-  --color-sidebar-foreground: var(--sidebar-foreground);
-  --color-sidebar: var(--sidebar);
-
-  --color-chart-5: var(--chart-5);
-  --color-chart-4: var(--chart-4);
-  --color-chart-3: var(--chart-3);
-  --color-chart-2: var(--chart-2);
-  --color-chart-1: var(--chart-1);
-
-  --radius-sm: calc(var(--radius) * 0.6);
-  --radius-md: calc(var(--radius) * 0.8);
-  --radius-lg: var(--radius);
-  --radius-xl: calc(var(--radius) * 1.4);
-  --radius-2xl: calc(var(--radius) * 1.8);
-  --radius-3xl: calc(var(--radius) * 2.2);
-  --radius-4xl: calc(var(--radius) * 2.6);
+  /* Radius scale (--radius-xs … --radius-4xl) is derived from --radius by @heroui/styles */
 }
 
-:root {
-  color-scheme: dark;
-  /* Base palette — always dark */
-  --background: #0a0a0a;
-  --foreground: #f0ebe0;
-  --card: #111111;
-  --card-foreground: #f0ebe0;
-  --popover: #111111;
-  --popover-foreground: #f0ebe0;
-  --surface: #1a1a1a;
-
-  /* Primary = deep crimson red */
-  --primary: #8b1a1a;
-  --primary-foreground: #f0ebe0;
-
-  /* Secondary = anthracite */
-  --secondary: #1f1f1f;
-  --secondary-foreground: #f0ebe0;
-
-  /* Muted */
-  --muted: #1a1a1a;
-  --muted-foreground: #8a8070;
-
-  /* Accent = aged gold */
-  --accent: #c9a84c;
-  --accent-foreground: #0a0a0a;
-
-  /* Gold helpers */
-  --gold: #c9a84c;
-  --gold-foreground: #0a0a0a;
-
-  --destructive: oklch(0.704 0.191 22.216);
-  --border: rgba(255, 255, 255, 0.08);
-  --input: rgba(255, 255, 255, 0.08);
-  --ring: #c9a84c;
-
-  --chart-1: #8b1a1a;
-  --chart-2: #c9a84c;
-  --chart-3: #1a1a1a;
-  --chart-4: #3a3a3a;
-  --chart-5: #f0ebe0;
-
-  --radius: 0.5rem;
-
-  --sidebar: #111111;
-  --sidebar-foreground: #f0ebe0;
-  --sidebar-primary: #8b1a1a;
-  --sidebar-primary-foreground: #f0ebe0;
-  --sidebar-accent: #1a1a1a;
-  --sidebar-accent-foreground: #f0ebe0;
-  --sidebar-border: rgba(255, 255, 255, 0.08);
-  --sidebar-ring: #c9a84c;
-}
-
-/* Force dark even if system is light */
+/* Tattoo Lounge is always dark — the studio's identity, not a user preference */
+:root,
 .dark {
   color-scheme: dark;
+
   --background: #0a0a0a;
   --foreground: #f0ebe0;
-  --card: #111111;
-  --card-foreground: #f0ebe0;
-  --popover: #111111;
-  --popover-foreground: #f0ebe0;
-  --surface: #1a1a1a;
-  --primary: #8b1a1a;
-  --primary-foreground: #f0ebe0;
-  --secondary: #1f1f1f;
-  --secondary-foreground: #f0ebe0;
-  --muted: #1a1a1a;
-  --muted-foreground: #8a8070;
-  --accent: #c9a84c;
-  --accent-foreground: #0a0a0a;
+
+  --surface: #121212;
+  --surface-foreground: #f0ebe0;
+  --surface-secondary: #1a1a1a;
+  --surface-secondary-foreground: #f0ebe0;
+  --surface-tertiary: #232323;
+  --surface-tertiary-foreground: #f0ebe0;
+
+  --overlay: #141414;
+  --overlay-foreground: #f0ebe0;
+
+  --default: #1f1f1f;
+  --default-foreground: #f0ebe0;
+
+  --muted: #8a8070;
+
+  --border: rgba(255, 255, 255, 0.1);
+  --separator: rgba(255, 255, 255, 0.08);
+  --backdrop: rgba(5, 4, 3, 0.8);
+
+  /* Brand: deep crimson drives every solid/interactive HeroUI surface */
+  --accent: #8b1a1a;
+  --accent-foreground: #f5efe6;
+
+  /* Brand: aged gold is the editorial highlight — eyebrows, dividers, focus */
   --gold: #c9a84c;
   --gold-foreground: #0a0a0a;
-  --destructive: oklch(0.704 0.191 22.216);
-  --border: rgba(255, 255, 255, 0.08);
-  --input: rgba(255, 255, 255, 0.08);
-  --ring: #c9a84c;
-  --sidebar: #111111;
-  --sidebar-foreground: #f0ebe0;
-  --sidebar-primary: #8b1a1a;
-  --sidebar-primary-foreground: #f0ebe0;
-  --sidebar-accent: #1a1a1a;
-  --sidebar-accent-foreground: #f0ebe0;
-  --sidebar-border: rgba(255, 255, 255, 0.08);
-  --sidebar-ring: #c9a84c;
+
+  --danger: #a3372e;
+  --danger-foreground: #f5efe6;
+  --success: #5c8a52;
+  --success-foreground: #f5efe6;
+  --warning: #c9a84c;
+  --warning-foreground: #0a0a0a;
+
+  --field-background: #141414;
+  --field-foreground: #f0ebe0;
+  --field-placeholder: color-mix(in oklab, #f0ebe0 45%, transparent);
+  --field-border: var(--border);
+  --field-border-width: 1px;
+
+  --segment: #1a1a1a;
+  --segment-foreground: #f0ebe0;
+
+  --focus: var(--gold);
+  --link: var(--gold);
+
+  /* Small, deliberate radius — refined editorial, not sharp, not a rounded SaaS bubble */
+  --radius: 0.375rem;
+
+  --glow-accent: 0 0 0 1px color-mix(in oklab, var(--accent) 60%, transparent), 0 8px 24px -8px color-mix(in oklab, var(--accent) 70%, transparent);
+  --glow-gold: 0 0 24px -4px color-mix(in oklab, var(--gold) 45%, transparent);
 }
 
 @layer base {
@@ -153,6 +109,19 @@
   }
   html {
     scroll-behavior: smooth;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
   }
 }
 
@@ -171,10 +140,10 @@
     border-color: var(--gold);
   }
   .text-crimson {
-    color: var(--primary);
+    color: var(--accent);
   }
   .bg-crimson {
-    background-color: var(--primary);
+    background-color: var(--accent);
   }
 
   /* Ink texture overlay */
@@ -195,29 +164,46 @@
     height: 1px;
     background: linear-gradient(to right, transparent, rgba(201, 168, 76, 0.3), transparent);
   }
-}
 
-/* Scroll animations */
-@keyframes fadeInUp {
-  from {
-    opacity: 0;
-    transform: translateY(30px);
+  .media-frame {
+    border-radius: var(--radius-lg);
+    overflow: hidden;
   }
-  to {
-    opacity: 1;
-    transform: translateY(0);
+
+  /* Every hand-authored bordered box uses the border-border utility — round them
+     all consistently instead of hunting each one down individually. */
+  .border-border {
+    border-radius: var(--radius-md);
+  }
+
+  .spotlight {
+    position: relative;
+    isolation: isolate;
+  }
+  .spotlight::before {
+    content: '';
+    position: absolute;
+    inset: -20% -10% auto -10%;
+    height: 70%;
+    z-index: -1;
+    background: radial-gradient(60% 60% at 50% 0%, color-mix(in oklab, var(--accent) 22%, transparent), transparent 70%);
+    pointer-events: none;
   }
 }
 
-@keyframes fadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
+/* Primary buttons get a subtle crimson glow — transform/opacity only, per interface guidelines */
+.button--primary {
+  box-shadow: var(--glow-accent);
+  transition:
+    transform 150ms var(--ease-out, ease),
+    box-shadow 200ms var(--ease-out, ease);
+}
+.button--primary:hover {
+  transform: translateY(-1px);
+}
+@media (prefers-reduced-motion: reduce) {
+  .button--primary:hover {
+    transform: none;
+  }
 }
 
-.animate-fade-in-up {
-  animation: fadeInUp 0.7s ease forwards;
-}
-
-.animate-fade-in {
-  animation: fadeIn 0.5s ease forwards;
-}
