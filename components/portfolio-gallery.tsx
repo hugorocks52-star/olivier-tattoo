@@ -22,12 +22,12 @@ interface PortfolioItem {
 }
 
 const portfolioItems: PortfolioItem[] = [
-  { id: 1, src: '/images/portfolio-1.png', style: 'Réalisme', zone: 'Avant-bras', title: 'Loup réaliste', description: "Portrait de loup en noir et gris, avec un travail précis sur le regard et la texture du pelage." },
-  { id: 2, src: '/images/portfolio-2.png', style: 'Fineline', zone: 'Poignet', title: 'Botanique fineline', description: 'Composition botanique minimaliste aux lignes très fines, pensée pour épouser le poignet.' },
-  { id: 3, src: '/images/portfolio-3.png', style: 'Couleur', zone: 'Bras', title: 'Rose néo-traditionnelle', description: 'Rose colorée aux contrastes profonds, associée à des lignes fortes et des détails géométriques.' },
-  { id: 4, src: '/images/portfolio-4.png', style: 'Cover', zone: 'Épaule', title: 'Cover-up mandala', description: "Transformation d'un ancien tatouage en mandala géométrique sombre et parfaitement intégré." },
-  { id: 5, src: '/images/portfolio-5.png', style: 'Réalisme', zone: 'Mollet', title: 'Portrait de lion', description: 'Portrait de lion en noir et gris, avec un travail subtil de lumière, de volume et de texture.' },
-  { id: 6, src: '/images/portfolio-6.png', style: 'Fineline', zone: 'Côtes', title: 'Géométrie sacrée', description: 'Mandala géométrique aux lignes nettes et à la symétrie précise, conçu pour suivre la ligne des côtes.' },
+  { id: 1, src: '/images/portfolio-1.jpg', style: 'Réalisme', zone: 'Avant-bras', title: 'Loup réaliste', description: "Portrait de loup en noir et gris, avec un travail précis sur le regard et la texture du pelage." },
+  { id: 2, src: '/images/portfolio-2.jpg', style: 'Fineline', zone: 'Poignet', title: 'Botanique fineline', description: 'Composition botanique minimaliste aux lignes très fines, pensée pour épouser le poignet.' },
+  { id: 3, src: '/images/portfolio-3.jpg', style: 'Couleur', zone: 'Bras', title: 'Rose néo-traditionnelle', description: 'Rose colorée aux contrastes profonds, associée à des lignes fortes et des détails géométriques.' },
+  { id: 4, src: '/images/portfolio-4.jpg', style: 'Cover', zone: 'Épaule', title: 'Cover-up mandala', description: "Transformation d'un ancien tatouage en mandala géométrique sombre et parfaitement intégré." },
+  { id: 5, src: '/images/portfolio-5.jpg', style: 'Réalisme', zone: 'Mollet', title: 'Portrait de lion', description: 'Portrait de lion en noir et gris, avec un travail subtil de lumière, de volume et de texture.' },
+  { id: 6, src: '/images/portfolio-6.jpg', style: 'Fineline', zone: 'Côtes', title: 'Géométrie sacrée', description: 'Mandala géométrique aux lignes nettes et à la symétrie précise, conçu pour suivre la ligne des côtes.' },
 ]
 
 const filters: Style[] = ['Tous', 'Réalisme', 'Noir & gris', 'Couleur', 'Fineline', 'Cover', 'Piercing']
@@ -56,12 +56,12 @@ export function PortfolioGallery({ variant = 'full', limit }: { variant?: 'full'
         <AnimatePresence mode="popLayout">
           {filtered.map((item, index) => (
             <motion.button
-              key={item.id} layout variants={fadeUp} exit={{ opacity: 0, scale: 0.96 }}
+              key={item.id} variants={fadeUp} exit={{ opacity: 0, scale: 0.96 }}
               onClick={() => setSelectedItem(item)}
               className={cn('group relative cursor-pointer overflow-hidden rounded-2xl border border-white/10 bg-card text-left focus-visible:ring-2 focus-visible:ring-primary', index % 3 === 1 && variant === 'teaser' ? 'lg:translate-y-6' : '')}
               aria-label={`Voir ${item.title}`}
             >
-              <div className="relative aspect-[4/5]"><Image src={item.src} alt={item.title} fill className="object-cover transition-[filter] duration-300 group-hover:brightness-110" sizes="(max-width: 768px) 50vw, 33vw" /><div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/5 to-transparent" /><span className="absolute start-3 top-3 rounded-full border border-white/15 bg-black/35 px-3 py-1 text-[0.65rem] text-white/80 backdrop-blur-md">{item.style}</span><span className="absolute inset-x-4 bottom-4"><strong className="block text-sm text-white sm:text-base">{item.title}</strong><span className="mt-1 flex items-center justify-between text-[0.68rem] text-white/55"><span>{item.zone}</span><ZoomIn className="size-4 text-primary opacity-0 transition-opacity group-hover:opacity-100" /></span></span></div>
+              <div className="relative aspect-[4/5]"><Image src={item.src} alt={item.title} fill className="bg-muted object-cover transition-[filter] duration-300 group-hover:brightness-110" sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 28vw" /><div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/5 to-transparent" /><span className="absolute start-3 top-3 rounded-full border border-white/15 bg-black/60 px-3 py-1 text-[0.65rem] text-white/80 sm:bg-black/35 sm:backdrop-blur-md">{item.style}</span><span className="absolute inset-x-4 bottom-4"><strong className="block text-sm text-white sm:text-base">{item.title}</strong><span className="mt-1 flex items-center justify-between text-[0.68rem] text-white/55"><span>{item.zone}</span><ZoomIn className="size-4 text-primary opacity-0 transition-opacity group-hover:opacity-100" /></span></span></div>
             </motion.button>
           ))}
         </AnimatePresence>

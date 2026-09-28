@@ -19,7 +19,7 @@ export function SiteFooter() {
   return (
     <>
       <footer className="relative overflow-hidden border-t border-white/10 bg-[#0c0909] pt-20">
-        <div className="absolute right-0 top-0 size-96 rounded-full bg-wine/15 blur-[110px]" aria-hidden="true" />
+        <div className="absolute right-0 top-0 hidden size-96 rounded-full bg-wine/15 blur-[110px] sm:block" aria-hidden="true" />
         <div className="container-shell relative">
           <div className="grid gap-12 pb-14 md:grid-cols-2 lg:grid-cols-[1.35fr_.8fr_1fr_1fr]">
             <div>
@@ -36,7 +36,7 @@ export function SiteFooter() {
       </footer>
 
       <AnimatePresence>
-        {showCookies && <motion.div initial={{ y: 80, opacity: 0 }} animate={{ y: 0, opacity: 1 }} exit={{ y: 80, opacity: 0 }} transition={{ duration: 0.4, ease: easeOut }} className="fixed inset-x-3 bottom-3 z-50 mx-auto max-w-3xl rounded-2xl border border-white/10 bg-popover/95 p-4 shadow-2xl shadow-black/50 backdrop-blur-2xl sm:p-5" role="region" aria-label="Préférences de cookies"><div className="flex flex-col gap-4 sm:flex-row sm:items-center"><p className="flex-1 text-xs leading-6 text-muted-foreground">Nous utilisons des données de visite anonymes pour améliorer votre expérience. Consultez notre <Link href="/politique-de-confidentialite" className="text-primary hover:underline">politique de confidentialité</Link>.</p><div className="flex gap-2"><Button size="sm" onClick={() => chooseCookies('accepted')}>Accepter</Button><Button size="sm" variant="outline" onClick={() => chooseCookies('declined')}>Refuser</Button></div></div></motion.div>}
+        {showCookies && <motion.div initial={{ y: 80, opacity: 0 }} animate={{ y: 0, opacity: 1 }} exit={{ y: 80, opacity: 0 }} transition={{ duration: 0.4, ease: easeOut }} className="fixed inset-x-3 bottom-3 z-50 mx-auto max-w-3xl rounded-2xl border border-white/10 bg-popover p-4 shadow-xl shadow-black/40 sm:bg-popover/95 sm:p-5 sm:backdrop-blur-2xl" role="region" aria-label="Préférences de cookies"><div className="flex flex-col gap-4 sm:flex-row sm:items-center"><p className="flex-1 text-xs leading-6 text-muted-foreground">Nous utilisons des données de visite anonymes pour améliorer votre expérience. Consultez notre <Link href="/politique-de-confidentialite" className="text-primary hover:underline">politique de confidentialité</Link>.</p><div className="flex gap-2"><Button size="sm" onClick={() => chooseCookies('accepted')}>Accepter</Button><Button size="sm" variant="outline" onClick={() => chooseCookies('declined')}>Refuser</Button></div></div></motion.div>}
       </AnimatePresence>
     </>
   )

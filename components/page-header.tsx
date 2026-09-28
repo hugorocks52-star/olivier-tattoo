@@ -15,9 +15,9 @@ interface PageHeaderProps {
 export function PageHeader({ eyebrow, title, description, breadcrumb }: PageHeaderProps) {
   return (
     <div className="relative overflow-hidden border-b border-white/10 pb-16 pt-36 lg:pb-24 lg:pt-44">
-      <div className="ambient-grid absolute inset-0 opacity-60" aria-hidden="true" />
-      <div className="absolute -end-28 top-14 size-96 rounded-full bg-wine/20 blur-[100px]" aria-hidden="true" />
-      <div className="absolute -start-20 bottom-0 size-72 rounded-full bg-primary/10 blur-[90px]" aria-hidden="true" />
+      <div className="ambient-grid absolute inset-0 hidden opacity-60 sm:block" aria-hidden="true" />
+      <div className="absolute -end-28 top-14 hidden size-96 rounded-full bg-wine/20 blur-[100px] sm:block" aria-hidden="true" />
+      <div className="absolute -start-20 bottom-0 hidden size-72 rounded-full bg-primary/10 blur-[90px] sm:block" aria-hidden="true" />
       <motion.div className="container-shell relative z-10" initial="hidden" animate="visible" variants={staggerContainer}>
         <motion.nav variants={fadeUp} aria-label="Fil d’Ariane" className="mb-8 flex items-center gap-2 text-xs text-muted-foreground">
           <Link href="/" className="transition-colors hover:text-primary">Accueil</Link>

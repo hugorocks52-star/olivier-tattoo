@@ -3,7 +3,7 @@
 import { useCallback, useRef, useState } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
-import { Camera, Download, Eye, EyeOff, FlipHorizontal, FlipVertical, Info, Minus, PencilRuler, Plus, Redo2, RefreshCcw, RotateCcw, RotateCw, Send, Undo2, Upload } from 'lucide-react'
+import { Camera, Download, Eye, EyeOff, FlipHorizontal, FlipVertical, Info, LoaderCircle, Minus, PencilRuler, Plus, Redo2, RefreshCcw, RotateCcw, RotateCw, Send, Undo2, Upload } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Slider } from '@/components/ui/slider'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
@@ -31,11 +31,44 @@ const blendModes = [
   { value: 'normal', label: 'Normal' },
 ]
 
+function prepareUploadedImage(file: File, maxDimension: number) {
+  return new Promise<string>((resolve, reject) => {
+    const objectUrl = URL.createObjectURL(file)
+    const image = new window.Image()
+    image.decoding = 'async'
+    image.onload = () => {
+      try {
+        const scale = Math.min(1, maxDimension / Math.max(image.naturalWidth, image.naturalHeight))
+        const canvas = document.createElement('canvas')
+        canvas.width = Math.max(1, Math.round(image.naturalWidth * scale))
+        canvas.height = Math.max(1, Math.round(image.naturalHeight * scale))
+        const context = canvas.getContext('2d')
+        if (!context) throw new Error('Canvas unavailable')
+        context.imageSmoothingEnabled = true
+        context.imageSmoothingQuality = 'high'
+        context.drawImage(image, 0, 0, canvas.width, canvas.height)
+        resolve(canvas.toDataURL('image/webp', 0.86))
+      } catch {
+        reject(new Error('Image processing failed'))
+      } finally {
+        URL.revokeObjectURL(objectUrl)
+      }
+    }
+    image.onerror = () => {
+      URL.revokeObjectURL(objectUrl)
+      reject(new Error('Image decoding failed'))
+    }
+    image.src = objectUrl
+  })
+}
+
 export function VirtualTryon() {
   const [bodyImage, setBodyImage] = useState<string | null>(null)
   const [tattooImage, setTattooImage] = useState<string | null>(null)
   const [originalTattooImage, setOriginalTattooImage] = useState<string | null>(null)
   const [isEditorOpen, setIsEditorOpen] = useState(false)
+  const [processingUpload, setProcessingUpload] = useState<'body' | 'tattoo' | null>(null)
+  const [uploadError, setUploadError] = useState<string | null>(null)
   const [transform, setTransform] = useState<Transform>(defaultTransform)
   const [history, setHistory] = useState<Transform[]>([defaultTransform])
   const [historyIndex, setHistoryIndex] = useState(0)
@@ -79,21 +112,25 @@ export function VirtualTryon() {
     setHistoryIndex(0)
   }
 
-  const readImage = (file: File, type: 'body' | 'tattoo') => {
-    const reader = new FileReader()
-    reader.onload = (event) => {
+  const readImage = async (file: File, type: 'body' | 'tattoo') => {
+    setProcessingUpload(type)
+    setUploadError(null)
+    try {
+      const image = await prepareUploadedImage(file, type === 'body' ? 1600 : 1200)
       if (type === 'body') {
-        setBodyImage(event.target?.result as string)
+        setBodyImage(image)
         setStep(2)
       } else {
-        const image = event.target?.result as string
         setTattooImage(image)
         setOriginalTattooImage(image)
         reset()
         setStep(3)
       }
+    } catch {
+      setUploadError("Cette image n'a pas pu être chargée. Essayez un fichier JPG, PNG ou WebP plus léger.")
+    } finally {
+      setProcessingUpload(null)
     }
-    reader.readAsDataURL(file)
   }
 
   const startDrag = (clientX: number, clientY: number) => {
@@ -165,6 +202,7 @@ export function VirtualTryon() {
   return (
     <Reveal>
       <div className="mb-8 flex max-w-3xl items-start gap-3 rounded-2xl border border-primary/20 bg-primary/[0.055] p-4"><Info className="mt-0.5 size-4 shrink-0 text-primary" /><p className="text-xs leading-6 text-muted-foreground"><strong className="text-foreground">Cet outil fournit uniquement une simulation visuelle.</strong> Le rendu réel varie selon la peau, la zone du corps et la technique utilisée. Vos images restent dans votre navigateur.</p></div>
+      {uploadError && <div className="mb-6 max-w-3xl rounded-xl border border-destructive/25 bg-destructive/10 px-4 py-3 text-sm text-destructive" role="alert">{uploadError}</div>}
 
       <div className="mb-8 flex items-center gap-2 sm:gap-4">
         {[{ num: 1, label: 'Votre photo' }, { num: 2, label: 'Votre motif' }, { num: 3, label: 'Les réglages' }].map(({ num, label }) => <div key={num} className="flex items-center gap-2 sm:gap-3"><span className={cn('grid size-8 place-items-center rounded-full border text-xs font-bold transition-[background-color,border-color,color,box-shadow]', step >= num ? 'border-primary bg-primary text-primary-foreground shadow-[0_0_25px_-8px_rgba(214,173,106,.8)]' : 'border-white/10 text-muted-foreground')}>{num}</span><span className={cn('hidden text-xs sm:inline', step >= num ? 'text-foreground' : 'text-muted-foreground')}>{label}</span>{num < 3 && <span className="h-px w-5 bg-white/10 sm:w-10" />}</div>)}
@@ -178,9 +216,9 @@ export function VirtualTryon() {
             onMouseMove={(event) => moveDrag(event.clientX, event.clientY)} onMouseUp={endDrag} onMouseLeave={endDrag}
             onTouchMove={(event) => moveDrag(event.touches[0].clientX, event.touches[0].clientY)} onTouchEnd={endDrag}
           >
-            {bodyImage ? <Image src={bodyImage} alt="Photo du corps sélectionnée" fill unoptimized className="object-contain" /> : <div className="absolute inset-0 grid place-items-center p-6"><div className="max-w-sm text-center"><span className="mx-auto grid size-16 place-items-center rounded-2xl border border-white/10 bg-white/[0.035] text-muted-foreground"><Upload className="size-7" /></span><h3 className="mt-5 text-lg font-bold">Ajoutez une photo de la zone à tatouer</h3><p className="mt-2 text-sm leading-7 text-muted-foreground">Pour un meilleur résultat, utilisez une photo claire, de face et sans ombre marquée.</p><div className="mt-6 flex flex-col justify-center gap-2 sm:flex-row"><Button onClick={() => bodyInputRef.current?.click()}><Upload /> Choisir une photo</Button><Button variant="outline" onClick={() => cameraInputRef.current?.click()}><Camera /> Utiliser la caméra</Button></div></div></div>}
+            {bodyImage ? <Image src={bodyImage} alt="Photo du corps sélectionnée" fill unoptimized sizes="100vw" className="object-contain" /> : <div className="absolute inset-0 grid place-items-center p-6"><div className="max-w-sm text-center"><span className="mx-auto grid size-16 place-items-center rounded-2xl border border-white/10 bg-white/[0.035] text-muted-foreground"><Upload className="size-7" /></span><h3 className="mt-5 text-lg font-bold">Ajoutez une photo de la zone à tatouer</h3><p className="mt-2 text-sm leading-7 text-muted-foreground">Pour un meilleur résultat, utilisez une photo claire, de face et sans ombre marquée.</p><div className="mt-6 flex flex-col justify-center gap-2 sm:flex-row"><Button onClick={() => bodyInputRef.current?.click()} disabled={processingUpload !== null}>{processingUpload === 'body' ? <LoaderCircle className="animate-spin" /> : <Upload />}{processingUpload === 'body' ? 'Préparation…' : 'Choisir une photo'}</Button><Button variant="outline" onClick={() => cameraInputRef.current?.click()} disabled={processingUpload !== null}><Camera /> Utiliser la caméra</Button></div></div></div>}
             {tattooImage && bodyImage && !showBefore && <Image src={tattooImage} alt="Motif de tatouage sélectionné" width={800} height={800} unoptimized style={tattooStyle} onMouseDown={(event) => startDrag(event.clientX, event.clientY)} onTouchStart={(event) => startDrag(event.touches[0].clientX, event.touches[0].clientY)} draggable={false} />}
-            {bodyImage && <span className={cn('absolute left-4 top-4 rounded-full border px-3 py-1 text-[0.65rem] backdrop-blur-xl', showBefore ? 'border-white/10 bg-black/40 text-white/70' : 'border-primary/25 bg-primary/15 text-primary')}>{showBefore ? 'Avant' : tattooImage ? 'Après' : 'Photo de base'}</span>}
+            {bodyImage && <span className={cn('absolute left-4 top-4 rounded-full border px-3 py-1 text-[0.65rem] sm:backdrop-blur-xl', showBefore ? 'border-white/10 bg-black/70 text-white/70 sm:bg-black/40' : 'border-primary/25 bg-background/90 text-primary sm:bg-primary/15')}>{showBefore ? 'Avant' : tattooImage ? 'Après' : 'Photo de base'}</span>}
           </div>
 
           {bodyImage && <div className="mt-3 flex flex-wrap gap-2"><Button size="sm" variant="outline" className={secondaryButton} onClick={() => bodyInputRef.current?.click()}><Upload /> Changer la photo</Button>{tattooImage && <><Button size="sm" variant="outline" className={secondaryButton} onClick={handleExport}><Download /> Enregistrer</Button><Button size="sm" variant="outline" className={secondaryButton} onClick={() => setShowBefore((current) => !current)}>{showBefore ? <Eye /> : <EyeOff />}{showBefore ? 'Voir avec le tatouage' : 'Avant / après'}</Button><Button size="sm" variant="outline" className={secondaryButton} onClick={reset}><RefreshCcw /> Réinitialiser</Button></>}</div>}
@@ -189,7 +227,7 @@ export function VirtualTryon() {
         <aside className="space-y-4">
           <div className="rounded-2xl border border-white/10 bg-card/60 p-4">
             <h3 className="mb-3 text-sm font-bold">Votre motif</h3>
-            {tattooImage ? <div><Image src={tattooImage} alt="Motif importé" width={400} height={160} unoptimized className="h-28 w-full rounded-xl bg-white/[0.025] object-contain p-2" /><div className="mt-2 grid gap-2"><Button size="sm" className="w-full" onClick={() => setIsEditorOpen(true)}><PencilRuler /> Détourer et retoucher</Button><Button variant="outline" size="sm" className="w-full" onClick={() => tattooInputRef.current?.click()}>Changer le motif</Button></div></div> : <button onClick={() => tattooInputRef.current?.click()} className="flex w-full cursor-pointer flex-col items-center gap-2 rounded-xl border border-dashed border-white/15 py-8 text-xs text-muted-foreground transition hover:border-primary/35 hover:text-primary"><Upload className="size-5" /> Importer un PNG ou JPG</button>}
+            {tattooImage ? <div><Image src={tattooImage} alt="Motif importé" width={400} height={160} unoptimized className="h-28 w-full rounded-xl bg-white/[0.025] object-contain p-2" /><div className="mt-2 grid gap-2"><Button size="sm" className="w-full" onClick={() => setIsEditorOpen(true)}><PencilRuler /> Détourer et retoucher</Button><Button variant="outline" size="sm" className="w-full" onClick={() => tattooInputRef.current?.click()} disabled={processingUpload !== null}>Changer le motif</Button></div></div> : <button onClick={() => tattooInputRef.current?.click()} disabled={processingUpload !== null} className="flex w-full cursor-pointer flex-col items-center gap-2 rounded-xl border border-dashed border-white/15 py-8 text-xs text-muted-foreground transition hover:border-primary/35 hover:text-primary disabled:pointer-events-none disabled:opacity-50">{processingUpload === 'tattoo' ? <LoaderCircle className="size-5 animate-spin" /> : <Upload className="size-5" />}{processingUpload === 'tattoo' ? 'Préparation du motif…' : 'Importer un PNG ou JPG'}</button>}
           </div>
 
           <Tabs defaultValue="transform" className="rounded-2xl border border-white/10 bg-card/60 p-3">
@@ -212,9 +250,9 @@ export function VirtualTryon() {
         </aside>
       </div>
 
-      <input ref={bodyInputRef} type="file" accept="image/*" className="hidden" onChange={(event) => { const file = event.target.files?.[0]; if (file) readImage(file, 'body') }} aria-label="Importer une photo du corps" />
-      <input ref={cameraInputRef} type="file" accept="image/*" capture="user" className="hidden" onChange={(event) => { const file = event.target.files?.[0]; if (file) readImage(file, 'body') }} aria-label="Prendre une photo avec la caméra" />
-      <input ref={tattooInputRef} type="file" accept="image/png,image/jpeg,image/webp" className="hidden" onChange={(event) => { const file = event.target.files?.[0]; if (file) readImage(file, 'tattoo') }} aria-label="Importer un motif de tatouage" />
+      <input ref={bodyInputRef} type="file" accept="image/*" className="hidden" onChange={(event) => { const file = event.target.files?.[0]; event.currentTarget.value = ''; if (file) void readImage(file, 'body') }} aria-label="Importer une photo du corps" />
+      <input ref={cameraInputRef} type="file" accept="image/*" capture="user" className="hidden" onChange={(event) => { const file = event.target.files?.[0]; event.currentTarget.value = ''; if (file) void readImage(file, 'body') }} aria-label="Prendre une photo avec la caméra" />
+      <input ref={tattooInputRef} type="file" accept="image/*" className="hidden" onChange={(event) => { const file = event.target.files?.[0]; event.currentTarget.value = ''; if (file) void readImage(file, 'tattoo') }} aria-label="Importer un motif de tatouage" />
       {tattooImage && originalTattooImage && <TattooImageEditor imageSrc={tattooImage} originalSrc={originalTattooImage} open={isEditorOpen} onOpenChange={setIsEditorOpen} onSave={setTattooImage} />}
     </Reveal>
   )

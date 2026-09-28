@@ -302,7 +302,7 @@ export function TattooImageEditor({ imageSrc, originalSrc, open, onOpenChange, o
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-h-[calc(100vh-2rem)] overflow-y-auto border-white/10 bg-card/95 p-0 backdrop-blur-2xl sm:max-w-5xl">
+      <DialogContent className="max-h-[calc(100vh-2rem)] overflow-y-auto border-white/10 bg-card p-0 sm:max-w-5xl sm:bg-card/95 sm:backdrop-blur-2xl">
         <DialogHeader className="border-b border-white/10 px-5 py-4 pr-14">
           <DialogTitle className="text-xl">Retoucher le motif</DialogTitle>
           <DialogDescription>Supprimez le fond, recadrez ou effacez les parties inutiles. Le traitement reste sur votre appareil.</DialogDescription>

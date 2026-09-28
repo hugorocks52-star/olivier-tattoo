@@ -29,7 +29,7 @@ export function SiteHeader() {
         aria-label="Navigation principale"
         className={cn(
           'mx-auto flex h-16 max-w-7xl items-center justify-between rounded-2xl border px-4 transition-[background-color,border-color,box-shadow,backdrop-filter] duration-300 sm:px-5 lg:h-[4.5rem]',
-          scrolled || open ? 'border-white/10 bg-background/88 shadow-2xl shadow-black/35 backdrop-blur-xl' : 'border-white/8 bg-black/20 backdrop-blur-md'
+          scrolled || open ? 'border-white/10 bg-background/95 shadow-xl shadow-black/25 sm:bg-background/88 sm:backdrop-blur-xl' : 'border-white/8 bg-black/65 sm:bg-black/20 sm:backdrop-blur-md'
         )}
       >
         <Link href="/" className="group flex items-center gap-3" aria-label="Tattoo Lounge, accueil">
@@ -45,7 +45,7 @@ export function SiteHeader() {
 
         <Sheet open={open} onOpenChange={setOpen}>
           <SheetTrigger asChild><Button variant="outline" size="icon" className="lg:hidden" aria-label="Ouvrir le menu"><Menu aria-hidden="true" /></Button></SheetTrigger>
-          <SheetContent side="right" className="w-[88vw] border-white/10 bg-background/96 p-0 backdrop-blur-2xl">
+          <SheetContent side="right" className="w-[88vw] border-white/10 bg-background p-0 sm:bg-background/96 sm:backdrop-blur-2xl">
             <SheetHeader className="border-b border-white/10 p-6 text-left"><SheetTitle className="text-lg">Tattoo Lounge</SheetTitle><SheetDescription>Une création unique, pensée pour vous.</SheetDescription></SheetHeader>
             <div className="flex flex-1 flex-col px-4 py-5">
               <nav aria-label="Navigation mobile" className="space-y-1">
