@@ -2,34 +2,10 @@
 
 import { useEffect } from 'react'
 import Link from 'next/link'
-import { Button } from '@heroui/react'
-import { buttonVariants } from '@heroui/styles'
+import { AlertTriangle, RotateCcw } from 'lucide-react'
+import { Button } from '@/components/ui/button'
 
 export default function GlobalError({ error, reset }: { error: Error & { digest?: string }; reset: () => void }) {
-  useEffect(() => {
-    console.error(error)
-  }, [error])
-
-  return (
-    <div className="min-h-[70vh] flex items-center justify-center px-4">
-      <div className="text-center max-w-md">
-        <p className="text-gold text-xs tracking-[0.3em] uppercase font-medium mb-4">Erreur</p>
-        <h1 className="font-serif text-4xl font-bold text-foreground mb-4 text-balance">
-          Une erreur est survenue
-        </h1>
-        <p className="text-muted-foreground leading-relaxed mb-10">
-          Quelque chose s&apos;est mal passé de notre côté. Vous pouvez réessayer, ou nous contacter directement si le
-          problème persiste.
-        </p>
-        <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-          <Button variant="primary" size="md" onPress={reset}>
-            Réessayer
-          </Button>
-          <Link href="/" className={buttonVariants({ variant: 'outline', size: 'md' })}>
-            Retour à l&apos;accueil
-          </Link>
-        </div>
-      </div>
-    </div>
-  )
+  useEffect(() => { console.error(error) }, [error])
+  return <div className="container-shell flex min-h-[78vh] items-center justify-center pt-28"><div className="max-w-lg text-center"><span className="mx-auto grid size-16 place-items-center rounded-2xl border border-destructive/20 bg-destructive/10 text-destructive"><AlertTriangle className="size-7" /></span><p className="eyebrow mt-7">Erreur inattendue</p><h1 className="mt-4 text-balance text-4xl font-black tracking-[-0.035em]">Un problème est survenu</h1><p className="mt-5 text-sm leading-7 text-muted-foreground">Réessayez. Si le problème persiste, contactez directement le studio.</p><div className="mt-8 flex flex-col justify-center gap-3 sm:flex-row"><Button onClick={reset}><RotateCcw /> Réessayer</Button><Button asChild variant="outline"><Link href="/">Retour à l&apos;accueil</Link></Button></div></div></div>
 }

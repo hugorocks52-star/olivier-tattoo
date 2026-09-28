@@ -1,7 +1,7 @@
 'use client'
 
-import { Breadcrumbs } from '@heroui/react'
-import { ChevronRight } from 'lucide-react'
+import Link from 'next/link'
+import { ChevronRight, CircleDot } from 'lucide-react'
 import { motion } from 'motion/react'
 import { fadeUp, staggerContainer } from '@/lib/motion'
 
@@ -14,35 +14,24 @@ interface PageHeaderProps {
 
 export function PageHeader({ eyebrow, title, description, breadcrumb }: PageHeaderProps) {
   return (
-    <div className="pt-32 pb-16 lg:pt-40 lg:pb-20 bg-surface border-b border-border">
-      <motion.div
-        className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8"
-        initial="hidden"
-        animate="visible"
-        variants={staggerContainer}
-      >
-        <motion.div variants={fadeUp}>
-          <Breadcrumbs separator={<ChevronRight size={12} className="text-muted-foreground" aria-hidden="true" />} className="mb-6 text-xs">
-            <Breadcrumbs.Item href="/" className="text-muted-foreground hover:text-gold transition-colors">
-              Accueil
-            </Breadcrumbs.Item>
-            <Breadcrumbs.Item href="#" className="text-foreground pointer-events-none" aria-current="page">
-              {breadcrumb}
-            </Breadcrumbs.Item>
-          </Breadcrumbs>
+    <div className="relative overflow-hidden border-b border-white/10 pb-16 pt-36 lg:pb-24 lg:pt-44">
+      <div className="ambient-grid absolute inset-0 opacity-60" aria-hidden="true" />
+      <div className="absolute -end-28 top-14 size-96 rounded-full bg-wine/20 blur-[100px]" aria-hidden="true" />
+      <div className="absolute -start-20 bottom-0 size-72 rounded-full bg-primary/10 blur-[90px]" aria-hidden="true" />
+      <motion.div className="container-shell relative z-10" initial="hidden" animate="visible" variants={staggerContainer}>
+        <motion.nav variants={fadeUp} aria-label="Fil d’Ariane" className="mb-8 flex items-center gap-2 text-xs text-muted-foreground">
+          <Link href="/" className="transition-colors hover:text-primary">Accueil</Link>
+          <ChevronRight className="size-3.5" aria-hidden="true" />
+          <span className="text-foreground" aria-current="page">{breadcrumb}</span>
+        </motion.nav>
+        <motion.div variants={fadeUp} className="mb-4 flex items-center gap-2 text-primary">
+          <CircleDot className="size-4" aria-hidden="true" />
+          <span className="text-xs font-bold tracking-[0.16em]">{eyebrow}</span>
         </motion.div>
-        <motion.div variants={fadeUp} className="flex items-center gap-3 mb-4">
-          <div className="h-px w-12 bg-gold opacity-70" aria-hidden="true" />
-          <span className="text-gold text-xs tracking-[0.3em] uppercase font-medium">{eyebrow}</span>
-        </motion.div>
-        <motion.h1 variants={fadeUp} className="font-serif text-4xl lg:text-6xl font-bold text-foreground mb-4 text-balance">
+        <motion.h1 variants={fadeUp} className="max-w-4xl whitespace-pre-line text-balance text-4xl font-black leading-[1.2] tracking-[-0.04em] text-foreground sm:text-5xl lg:text-6xl">
           {title}
         </motion.h1>
-        {description && (
-          <motion.p variants={fadeUp} className="text-muted-foreground text-lg max-w-2xl leading-relaxed">
-            {description}
-          </motion.p>
-        )}
+        {description && <motion.p variants={fadeUp} className="mt-5 max-w-2xl text-base leading-8 text-muted-foreground sm:text-lg">{description}</motion.p>}
       </motion.div>
     </div>
   )

@@ -3,140 +3,58 @@
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { Menu, X, Phone } from 'lucide-react'
-import { Drawer } from '@heroui/react'
-import { buttonVariants } from '@heroui/styles'
+import { Fingerprint, Menu, Phone } from 'lucide-react'
 import { motion } from 'motion/react'
+import { Button } from '@/components/ui/button'
+import { Sheet, SheetClose, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet'
 import { easeOut } from '@/lib/motion'
 import { cn } from '@/lib/utils'
 import { navLinks, siteConfig } from '@/lib/site-config'
 
 export function SiteHeader() {
   const pathname = usePathname()
-  const [isOpen, setIsOpen] = useState(false)
+  const [open, setOpen] = useState(false)
   const [scrolled, setScrolled] = useState(false)
 
   useEffect(() => {
-    const handleScroll = () => setScrolled(window.scrollY > 40)
-    handleScroll()
-    window.addEventListener('scroll', handleScroll)
-    return () => window.removeEventListener('scroll', handleScroll)
+    const onScroll = () => setScrolled(window.scrollY > 24)
+    onScroll()
+    window.addEventListener('scroll', onScroll, { passive: true })
+    return () => window.removeEventListener('scroll', onScroll)
   }, [])
 
-  const closeMenu = () => setIsOpen(false)
-
   return (
-    <motion.header
-      initial={{ y: -24, opacity: 0 }}
-      animate={{ y: 0, opacity: 1 }}
-      transition={{ duration: 0.5, ease: easeOut }}
-      className={cn(
-        'fixed top-0 left-0 right-0 z-50 transition-all duration-500',
-        scrolled || isOpen
-          ? 'bg-background/95 backdrop-blur-md border-b border-border'
-          : 'bg-transparent'
-      )}
-    >
-      <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8" aria-label="Navigation principale">
-        <div className="flex items-center justify-between h-16 lg:h-20">
-          <Link href="/" className="flex flex-col leading-none group" aria-label="Tattoo Lounge — retour à l'accueil">
-            <span className="font-serif text-xl lg:text-2xl text-foreground tracking-widest uppercase font-bold">
-              Tattoo
-            </span>
-            <span className="font-serif text-xl lg:text-2xl text-gold tracking-widest uppercase font-bold -mt-1">
-              Lounge
-            </span>
-          </Link>
+    <motion.header initial={{ y: -20, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ duration: 0.55, ease: easeOut }} className="fixed inset-x-0 top-0 z-50 px-3 pt-3 sm:px-5">
+      <nav
+        aria-label="Navigation principale"
+        className={cn(
+          'mx-auto flex h-16 max-w-7xl items-center justify-between rounded-2xl border px-4 transition-[background-color,border-color,box-shadow,backdrop-filter] duration-300 sm:px-5 lg:h-[4.5rem]',
+          scrolled || open ? 'border-white/10 bg-background/88 shadow-2xl shadow-black/35 backdrop-blur-xl' : 'border-white/8 bg-black/20 backdrop-blur-md'
+        )}
+      >
+        <Link href="/" className="group flex items-center gap-3" aria-label="Tattoo Lounge, accueil">
+          <span className="grid size-10 place-items-center rounded-xl border border-primary/25 bg-primary/10 text-primary shadow-[0_0_35px_-14px_rgba(214,173,106,0.9)]"><Fingerprint className="size-5" aria-hidden="true" /></span>
+          <span className="leading-tight"><span className="block text-base font-black tracking-tight text-foreground">Tattoo Lounge</span><span className="block text-[0.6rem] tracking-[0.17em] text-muted-foreground">ATELIER D&apos;OLIVIER</span></span>
+        </Link>
 
-          {/* Desktop nav */}
-          <ul className="hidden lg:flex items-center gap-8" role="list">
-            {navLinks.map((link) => {
-              const active = pathname === link.href
-              return (
-                <li key={link.href}>
-                  <Link
-                    href={link.href}
-                    aria-current={active ? 'page' : undefined}
-                    className={cn(
-                      'text-sm tracking-wider uppercase transition-colors duration-200 relative after:absolute after:bottom-0 after:left-0 after:h-px after:bg-gold after:transition-all after:duration-300',
-                      active
-                        ? 'text-foreground after:w-full'
-                        : 'text-muted-foreground hover:text-foreground after:w-0 hover:after:w-full'
-                    )}
-                  >
-                    {link.label}
-                  </Link>
-                </li>
-              )
-            })}
-          </ul>
+        <ul className="hidden items-center gap-1 lg:flex" role="list">
+          {navLinks.map((link) => <li key={link.href}><Link href={link.href} aria-current={pathname === link.href ? 'page' : undefined} className={cn('relative rounded-lg px-3.5 py-2 text-sm transition-colors', pathname === link.href ? 'bg-white/[0.07] text-primary' : 'text-muted-foreground hover:bg-white/[0.04] hover:text-foreground')}>{link.label}</Link></li>)}
+        </ul>
 
-          <div className="hidden lg:flex">
-            <Link href="/rendez-vous" className={buttonVariants({ variant: 'primary', size: 'md' })}>
-              Prendre rendez-vous
-            </Link>
-          </div>
+        <div className="hidden items-center gap-2 lg:flex"><Button asChild variant="ghost" size="icon" aria-label="Appeler le studio"><a href={`tel:${siteConfig.phone}`}><Phone aria-hidden="true" /></a></Button><Button asChild><Link href="/rendez-vous">Prendre rendez-vous</Link></Button></div>
 
-          {/* Mobile menu trigger */}
-          <Drawer.Root isOpen={isOpen} onOpenChange={setIsOpen}>
-            <Drawer.Trigger className="lg:hidden p-2 text-foreground" aria-label="Ouvrir le menu">
-              <Menu size={22} aria-hidden="true" />
-            </Drawer.Trigger>
-            <Drawer.Backdrop>
-              <Drawer.Content placement="right" className="w-[85vw] max-w-sm">
-                <Drawer.Dialog className="flex h-full flex-col bg-background">
-                  <Drawer.Header className="flex items-center justify-between px-6 pt-6 pb-4 border-b border-border">
-                    <Drawer.Heading className="font-serif text-lg tracking-widest uppercase text-foreground">
-                      Menu
-                    </Drawer.Heading>
-                    <Drawer.CloseTrigger
-                      className="p-2 text-muted-foreground hover:text-foreground transition-colors"
-                      aria-label="Fermer le menu"
-                    >
-                      <X size={20} aria-hidden="true" />
-                    </Drawer.CloseTrigger>
-                  </Drawer.Header>
-                  <Drawer.Body className="flex-1 overflow-y-auto px-6 py-6">
-                    <ul className="flex flex-col gap-1" role="list">
-                      <li>
-                        <Link
-                          href="/"
-                          onClick={closeMenu}
-                          className="block w-full py-3 text-sm tracking-wider uppercase text-muted-foreground hover:text-foreground border-b border-border/50 transition-colors"
-                        >
-                          Accueil
-                        </Link>
-                      </li>
-                      {navLinks.map((link) => (
-                        <li key={link.href}>
-                          <Link
-                            href={link.href}
-                            onClick={closeMenu}
-                            className="block w-full py-3 text-sm tracking-wider uppercase text-muted-foreground hover:text-foreground border-b border-border/50 transition-colors"
-                          >
-                            {link.label}
-                          </Link>
-                        </li>
-                      ))}
-                    </ul>
-                  </Drawer.Body>
-                  <Drawer.Footer className="px-6 pb-8 pt-4 border-t border-border flex flex-col gap-3">
-                    <Link href="/rendez-vous" onClick={closeMenu} className={cn(buttonVariants({ variant: 'primary', size: 'lg' }), 'w-full')}>
-                      Prendre rendez-vous
-                    </Link>
-                    <a
-                      href={`tel:${siteConfig.phone}`}
-                      className={cn(buttonVariants({ variant: 'outline', size: 'lg' }), 'w-full')}
-                    >
-                      <Phone size={14} aria-hidden="true" />
-                      {siteConfig.phoneDisplay}
-                    </a>
-                  </Drawer.Footer>
-                </Drawer.Dialog>
-              </Drawer.Content>
-            </Drawer.Backdrop>
-          </Drawer.Root>
-        </div>
+        <Sheet open={open} onOpenChange={setOpen}>
+          <SheetTrigger asChild><Button variant="outline" size="icon" className="lg:hidden" aria-label="Ouvrir le menu"><Menu aria-hidden="true" /></Button></SheetTrigger>
+          <SheetContent side="right" className="w-[88vw] border-white/10 bg-background/96 p-0 backdrop-blur-2xl">
+            <SheetHeader className="border-b border-white/10 p-6 text-left"><SheetTitle className="text-lg">Tattoo Lounge</SheetTitle><SheetDescription>Une création unique, pensée pour vous.</SheetDescription></SheetHeader>
+            <div className="flex flex-1 flex-col px-4 py-5">
+              <nav aria-label="Navigation mobile" className="space-y-1">
+                {[{ href: '/', label: 'Accueil' }, ...navLinks].map((link) => <SheetClose asChild key={link.href}><Link href={link.href} className={cn('flex items-center justify-between rounded-xl px-4 py-3.5 text-sm transition-colors', pathname === link.href ? 'bg-primary/10 text-primary' : 'text-muted-foreground hover:bg-white/[0.05] hover:text-foreground')}>{link.label}<span className="text-xs text-white/25">→</span></Link></SheetClose>)}
+              </nav>
+              <div className="mt-auto space-y-3 border-t border-white/10 pt-5"><SheetClose asChild><Button asChild size="lg" className="w-full"><Link href="/rendez-vous">Prendre rendez-vous</Link></Button></SheetClose><Button asChild variant="outline" size="lg" className="w-full"><a href={`tel:${siteConfig.phone}`}><Phone />{siteConfig.phoneDisplay}</a></Button></div>
+            </div>
+          </SheetContent>
+        </Sheet>
       </nav>
     </motion.header>
   )

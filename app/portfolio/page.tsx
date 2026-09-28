@@ -3,33 +3,8 @@ import { PageHeader } from '@/components/page-header'
 import { PortfolioGallery } from '@/components/portfolio-gallery'
 import { breadcrumbSchema } from '@/lib/schema'
 
-export const metadata: Metadata = {
-  title: 'Portfolio',
-  description:
-    "Découvrez le portfolio d'Olivier, tatoueur à Auvers-sur-Oise : réalisme, noir & gris, fineline, couleur et covers.",
-  alternates: { canonical: '/portfolio' },
-}
+export const metadata: Metadata = { title: 'Portfolio', description: "Découvrez les réalisations d'Olivier en réalisme, noir & gris, fineline, couleur et cover.", alternates: { canonical: '/portfolio' } }
 
 export default function PortfolioPage() {
-  return (
-    <div>
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{
-          __html: JSON.stringify(breadcrumbSchema([{ name: 'Accueil', path: '/' }, { name: 'Portfolio', path: '/portfolio' }])),
-        }}
-      />
-      <PageHeader
-        eyebrow="Réalisations"
-        title="Le portfolio d'Olivier"
-        description="Chaque tatouage raconte une histoire. Filtrez par style pour explorer nos réalisations en réalisme, noir & gris, fineline, couleur et covers."
-        breadcrumb="Portfolio"
-      />
-      <section className="py-16 lg:py-24 bg-background">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <PortfolioGallery variant="full" />
-        </div>
-      </section>
-    </div>
-  )
+  return <div><script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema([{ name: 'Accueil', path: '/' }, { name: 'Portfolio', path: '/portfolio' }])) }} /><PageHeader eyebrow="Archives du studio" title="Le portfolio d'Olivier" description="Choisissez un style et découvrez le détail de chaque projet. Chaque pièce est conçue pour le corps et l'histoire de son propriétaire." breadcrumb="Portfolio" /><section className="section-space"><div className="container-shell"><PortfolioGallery variant="full" /></div></section></div>
 }

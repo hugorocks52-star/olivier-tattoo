@@ -1,6 +1,5 @@
 import { siteConfig } from '@/lib/site-config'
 
-/** Shared LocalBusiness JSON-LD, reused on every page via app/layout.tsx. */
 export function localBusinessSchema() {
   return {
     '@context': 'https://schema.org',

@@ -3,10 +3,10 @@
 import { useState } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
-import { X, ZoomIn, ChevronLeft, ChevronRight, ImageOff } from 'lucide-react'
-import { Modal, ToggleButtonGroup, ToggleButton, EmptyState } from '@heroui/react'
-import { buttonVariants } from '@heroui/styles'
+import { ArrowRight, ChevronLeft, ChevronRight, ImageOff, ZoomIn } from 'lucide-react'
 import { AnimatePresence, motion } from 'motion/react'
+import { Button } from '@/components/ui/button'
+import { Dialog, DialogContent, DialogDescription, DialogTitle } from '@/components/ui/dialog'
 import { cn } from '@/lib/utils'
 import { fadeUp, staggerContainer } from '@/lib/motion'
 
@@ -22,227 +22,63 @@ interface PortfolioItem {
 }
 
 const portfolioItems: PortfolioItem[] = [
-  {
-    id: 1,
-    src: '/images/portfolio-1.png',
-    style: 'Réalisme',
-    zone: 'Avant-bras',
-    title: 'Loup réaliste',
-    description:
-      "Portrait de loup en réalisme noir et gris, avec un travail détaillé sur les textures du pelage et l'expression des yeux.",
-  },
-  {
-    id: 2,
-    src: '/images/portfolio-2.png',
-    style: 'Fineline',
-    zone: 'Poignet',
-    title: 'Botanique fineline',
-    description:
-    "Illustration botanique en fineline sur le poignet intérieur, avec des lignes d'une précision millimétrée.",
-  },
-  {
-    id: 3,
-    src: '/images/portfolio-3.png',
-    style: 'Couleur',
-    zone: 'Bras',
-    title: 'Rose néo-traditionnelle',
-    description: 'Rose en style néo-traditionnel avec des couleurs vives et des contours gras, associée à des éléments géométriques.',
-  },
-  {
-    id: 4,
-    src: '/images/portfolio-4.png',
-    style: 'Cover',
-    zone: 'Épaule',
-    title: 'Cover-up mandala',
-    description: 'Transformation d\'un ancien tatouage en un mandala géométrique sombre — une cover alliant technique et créativité.',
-  },
-  {
-    id: 5,
-    src: '/images/portfolio-5.png',
-    style: 'Réalisme',
-    zone: 'Mollet',
-    title: 'Lion portrait',
-    description: "Portrait de lion en réalisme noir et gris, avec un travail d'ombre et de lumière d'une grande finesse.",
-  },
-  {
-    id: 6,
-    src: '/images/portfolio-6.png',
-    style: 'Fineline',
-    zone: 'Côtes',
-    title: 'Géométrie sacrée',
-    description: "Mandala de géométrie sacrée en fineline sur les côtes, avec des lignes d'une précision extrême.",
-  },
+  { id: 1, src: '/images/portfolio-1.png', style: 'Réalisme', zone: 'Avant-bras', title: 'Loup réaliste', description: "Portrait de loup en noir et gris, avec un travail précis sur le regard et la texture du pelage." },
+  { id: 2, src: '/images/portfolio-2.png', style: 'Fineline', zone: 'Poignet', title: 'Botanique fineline', description: 'Composition botanique minimaliste aux lignes très fines, pensée pour épouser le poignet.' },
+  { id: 3, src: '/images/portfolio-3.png', style: 'Couleur', zone: 'Bras', title: 'Rose néo-traditionnelle', description: 'Rose colorée aux contrastes profonds, associée à des lignes fortes et des détails géométriques.' },
+  { id: 4, src: '/images/portfolio-4.png', style: 'Cover', zone: 'Épaule', title: 'Cover-up mandala', description: "Transformation d'un ancien tatouage en mandala géométrique sombre et parfaitement intégré." },
+  { id: 5, src: '/images/portfolio-5.png', style: 'Réalisme', zone: 'Mollet', title: 'Portrait de lion', description: 'Portrait de lion en noir et gris, avec un travail subtil de lumière, de volume et de texture.' },
+  { id: 6, src: '/images/portfolio-6.png', style: 'Fineline', zone: 'Côtes', title: 'Géométrie sacrée', description: 'Mandala géométrique aux lignes nettes et à la symétrie précise, conçu pour suivre la ligne des côtes.' },
 ]
 
 const filters: Style[] = ['Tous', 'Réalisme', 'Noir & gris', 'Couleur', 'Fineline', 'Cover', 'Piercing']
 
-interface PortfolioGalleryProps {
-  /** 'full' shows filters and every item; 'teaser' shows a subset with no filters. */
-  variant?: 'full' | 'teaser'
-  limit?: number
-}
-
-export function PortfolioGallery({ variant = 'full', limit }: PortfolioGalleryProps) {
+export function PortfolioGallery({ variant = 'full', limit }: { variant?: 'full' | 'teaser'; limit?: number }) {
   const [activeFilter, setActiveFilter] = useState<Style>('Tous')
   const [selectedItem, setSelectedItem] = useState<PortfolioItem | null>(null)
-
-  const base = activeFilter === 'Tous' || variant === 'teaser'
-    ? portfolioItems
-    : portfolioItems.filter((item) => item.style === activeFilter)
+  const base = activeFilter === 'Tous' || variant === 'teaser' ? portfolioItems : portfolioItems.filter((item) => item.style === activeFilter)
   const filtered = variant === 'teaser' && limit ? base.slice(0, limit) : base
+  const currentIndex = selectedItem ? filtered.findIndex((item) => item.id === selectedItem.id) : -1
 
-  const currentIndex = selectedItem ? filtered.findIndex((i) => i.id === selectedItem.id) : -1
-
-  const navigate = (dir: 'prev' | 'next') => {
-    if (currentIndex === -1) return
-    const next = dir === 'next'
-      ? (currentIndex + 1) % filtered.length
-      : (currentIndex - 1 + filtered.length) % filtered.length
-    setSelectedItem(filtered[next])
+  const navigate = (direction: -1 | 1) => {
+    if (currentIndex < 0) return
+    setSelectedItem(filtered[(currentIndex + direction + filtered.length) % filtered.length])
   }
 
   return (
     <div>
       {variant === 'full' && (
-        <ToggleButtonGroup
-          selectionMode="single"
-          disallowEmptySelection
-          selectedKeys={new Set([activeFilter])}
-          onSelectionChange={(keys) => setActiveFilter(Array.from(keys)[0] as Style)}
-          isDetached
-          aria-label="Filtrer par style"
-          className="flex-wrap gap-3 mb-12"
-        >
-          {filters.map((filter) => (
-            <ToggleButton key={filter} id={filter} className="text-xs tracking-wider uppercase">
-              {filter}
-            </ToggleButton>
-          ))}
-        </ToggleButtonGroup>
+        <div className="mb-10 flex flex-wrap gap-2" role="group" aria-label="Filtrer les réalisations par style">
+          {filters.map((filter) => <Button key={filter} type="button" size="sm" variant={activeFilter === filter ? 'default' : 'outline'} onClick={() => setActiveFilter(filter)}>{filter}</Button>)}
+        </div>
       )}
 
-      <motion.div
-        key={activeFilter}
-        className="grid grid-cols-2 md:grid-cols-3 gap-3 lg:gap-4"
-        initial="hidden"
-        animate="visible"
-        variants={staggerContainer}
-      >
-        <AnimatePresence>
-          {filtered.map((item) => (
+      <motion.div key={activeFilter} className="grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-3" initial="hidden" animate="visible" variants={staggerContainer}>
+        <AnimatePresence mode="popLayout">
+          {filtered.map((item, index) => (
             <motion.button
-              key={item.id}
-              layout
-              variants={fadeUp}
-              exit={{ opacity: 0, scale: 0.96 }}
-              whileHover={{ y: -4 }}
+              key={item.id} layout variants={fadeUp} exit={{ opacity: 0, scale: 0.96 }}
               onClick={() => setSelectedItem(item)}
-              className="media-frame group relative aspect-square bg-surface cursor-pointer"
+              className={cn('group relative cursor-pointer overflow-hidden rounded-2xl border border-white/10 bg-card text-left focus-visible:ring-2 focus-visible:ring-primary', index % 3 === 1 && variant === 'teaser' ? 'lg:translate-y-6' : '')}
               aria-label={`Voir ${item.title}`}
             >
-              <Image
-                src={item.src}
-                alt={item.title}
-                fill
-                className="object-cover transition-transform duration-500 group-hover:scale-105"
-                sizes="(max-width: 768px) 50vw, 33vw"
-              />
-              <div className="absolute inset-0 bg-background/70 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col items-center justify-center gap-2">
-                <ZoomIn size={24} className="text-gold" aria-hidden="true" />
-                <span className="text-foreground text-sm font-medium tracking-wide">{item.title}</span>
-                <span className="text-gold text-xs tracking-wider uppercase">{item.style}</span>
-              </div>
+              <div className="relative aspect-[4/5]"><Image src={item.src} alt={item.title} fill className="object-cover transition-[filter] duration-300 group-hover:brightness-110" sizes="(max-width: 768px) 50vw, 33vw" /><div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/5 to-transparent" /><span className="absolute start-3 top-3 rounded-full border border-white/15 bg-black/35 px-3 py-1 text-[0.65rem] text-white/80 backdrop-blur-md">{item.style}</span><span className="absolute inset-x-4 bottom-4"><strong className="block text-sm text-white sm:text-base">{item.title}</strong><span className="mt-1 flex items-center justify-between text-[0.68rem] text-white/55"><span>{item.zone}</span><ZoomIn className="size-4 text-primary opacity-0 transition-opacity group-hover:opacity-100" /></span></span></div>
             </motion.button>
           ))}
         </AnimatePresence>
       </motion.div>
 
-      {filtered.length === 0 && (
-        <EmptyState className="py-20 text-center">
-          <ImageOff size={28} className="mx-auto mb-4 text-muted-foreground" aria-hidden="true" />
-          <p>Aucune réalisation dans ce style pour le moment.</p>
-        </EmptyState>
-      )}
+      {filtered.length === 0 && <div className="rounded-2xl border border-dashed border-white/10 py-20 text-center text-muted-foreground"><ImageOff className="mx-auto mb-3 size-7" /><p>Aucune réalisation dans ce style pour le moment.</p></div>}
 
-      {variant === 'teaser' && (
-        <div className="mt-10 text-center">
-          <Link href="/portfolio" className={buttonVariants({ variant: 'outline', size: 'lg' })}>
-            Voir tout le portfolio
-          </Link>
-        </div>
-      )}
+      {variant === 'teaser' && <div className="mt-14 text-center"><Button asChild variant="outline" size="lg"><Link href="/portfolio">Voir tout le portfolio <ArrowRight /></Link></Button></div>}
 
-      <Modal.Root
-        isOpen={selectedItem !== null}
-        onOpenChange={(open) => !open && setSelectedItem(null)}
-      >
-        <Modal.Backdrop>
-          <Modal.Container size="lg">
-            <Modal.Dialog aria-label={selectedItem?.title}>
-              {selectedItem && (
-                <div className="relative flex flex-col lg:flex-row gap-8">
-                  <AnimatePresence mode="wait">
-                    <motion.div
-                      key={selectedItem.id}
-                      initial={{ opacity: 0 }}
-                      animate={{ opacity: 1 }}
-                      transition={{ duration: 0.25 }}
-                      className="media-frame relative flex-1 aspect-square lg:aspect-auto lg:min-h-[500px]"
-                    >
-                      <Image
-                        src={selectedItem.src}
-                        alt={selectedItem.title}
-                        fill
-                        className="object-cover"
-                        sizes="(max-width: 1024px) 100vw, 60vw"
-                      />
-                    </motion.div>
-                  </AnimatePresence>
-
-                  <div className="lg:w-72 flex flex-col justify-center p-6 lg:p-0 lg:pr-6">
-                    <span className="text-gold text-xs tracking-[0.3em] uppercase mb-3">{selectedItem.style}</span>
-                    <h3 className="font-serif text-2xl font-bold text-foreground mb-2">{selectedItem.title}</h3>
-                    <p className="text-muted-foreground text-sm mb-1">
-                      <span className="text-foreground font-medium">Zone :</span> {selectedItem.zone}
-                    </p>
-                    <p className="text-muted-foreground leading-relaxed mt-4 text-sm">{selectedItem.description}</p>
-                    <Link
-                      href="/rendez-vous"
-                      onClick={() => setSelectedItem(null)}
-                      className={cn(buttonVariants({ variant: 'primary', size: 'md' }), 'mt-8')}
-                    >
-                      Demander un projet similaire
-                    </Link>
-                  </div>
-
-                  {filtered.length > 1 && (
-                    <>
-                      <button
-                        onClick={() => navigate('prev')}
-                        className="absolute left-2 top-1/2 -translate-y-1/2 p-2 bg-background/80 text-foreground hover:text-gold transition-colors"
-                        aria-label="Réalisation précédente"
-                      >
-                        <ChevronLeft size={20} />
-                      </button>
-                      <button
-                        onClick={() => navigate('next')}
-                        className="absolute right-2 top-1/2 -translate-y-1/2 p-2 bg-background/80 text-foreground hover:text-gold transition-colors"
-                        aria-label="Réalisation suivante"
-                      >
-                        <ChevronRight size={20} />
-                      </button>
-                    </>
-                  )}
-
-                  <Modal.CloseTrigger className="absolute top-2 right-2 p-2 bg-background/80 text-foreground hover:text-gold transition-colors">
-                    <X size={20} />
-                  </Modal.CloseTrigger>
-                </div>
-              )}
-            </Modal.Dialog>
-          </Modal.Container>
-        </Modal.Backdrop>
-      </Modal.Root>
+      <Dialog open={selectedItem !== null} onOpenChange={(open) => !open && setSelectedItem(null)}>
+        <DialogContent className="max-h-[92vh] max-w-5xl overflow-y-auto border-white/10 bg-popover/98 p-0 shadow-2xl shadow-black/60" showCloseButton>
+          {selectedItem && <div className="grid lg:grid-cols-[1.25fr_.75fr]">
+            <div className="relative min-h-[56vh] overflow-hidden rounded-t-xl lg:rounded-s-xl lg:rounded-e-none"><Image src={selectedItem.src} alt={selectedItem.title} fill className="object-cover" sizes="(max-width: 1024px) 100vw, 60vw" /><div className="absolute inset-0 bg-gradient-to-t from-black/35 to-transparent" /></div>
+            <div className="flex flex-col justify-center p-7 sm:p-9"><span className="eyebrow mb-4">{selectedItem.style}</span><DialogTitle className="text-2xl font-black sm:text-3xl">{selectedItem.title}</DialogTitle><p className="mt-3 text-xs text-primary">Zone : {selectedItem.zone}</p><DialogDescription className="mt-5 text-sm leading-7">{selectedItem.description}</DialogDescription><Button asChild className="mt-8"><Link href="/rendez-vous" onClick={() => setSelectedItem(null)}>Demander un projet similaire <ArrowRight /></Link></Button>{filtered.length > 1 && <div className="mt-5 flex gap-2"><Button variant="outline" size="icon" onClick={() => navigate(-1)} aria-label="Réalisation précédente"><ChevronLeft /></Button><Button variant="outline" size="icon" onClick={() => navigate(1)} aria-label="Réalisation suivante"><ChevronRight /></Button></div>}</div>
+          </div>}
+        </DialogContent>
+      </Dialog>
     </div>
   )
 }

@@ -1,27 +1,7 @@
 import Link from 'next/link'
-import { buttonVariants } from '@heroui/styles'
+import { ArrowLeft, SearchX } from 'lucide-react'
+import { Button } from '@/components/ui/button'
 
 export default function NotFound() {
-  return (
-    <div className="min-h-[70vh] flex items-center justify-center px-4">
-      <div className="text-center max-w-md">
-        <p className="text-gold text-xs tracking-[0.3em] uppercase font-medium mb-4">Erreur 404</p>
-        <h1 className="font-serif text-4xl lg:text-5xl font-bold text-foreground mb-4 text-balance">
-          Cette page n&apos;existe pas
-        </h1>
-        <p className="text-muted-foreground leading-relaxed mb-10">
-          La page que vous recherchez a peut-être été déplacée ou n&apos;existe plus. Retrouvez le portfolio ou
-          prenez rendez-vous avec Olivier.
-        </p>
-        <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-          <Link href="/" className={buttonVariants({ variant: 'primary', size: 'md' })}>
-            Retour à l&apos;accueil
-          </Link>
-          <Link href="/portfolio" className={buttonVariants({ variant: 'outline', size: 'md' })}>
-            Voir le portfolio
-          </Link>
-        </div>
-      </div>
-    </div>
-  )
+  return <div className="container-shell flex min-h-[78vh] items-center justify-center pt-28"><div className="max-w-lg text-center"><span className="mx-auto grid size-16 place-items-center rounded-2xl border border-primary/20 bg-primary/10 text-primary"><SearchX className="size-7" /></span><p className="eyebrow mt-7">Erreur 404</p><h1 className="mt-4 text-balance text-4xl font-black tracking-[-0.035em] sm:text-5xl">Cette page n&apos;existe pas</h1><p className="mt-5 text-sm leading-7 text-muted-foreground">L&apos;adresse a peut-être changé. Revenez à l&apos;accueil ou découvrez le portfolio.</p><div className="mt-8 flex flex-col justify-center gap-3 sm:flex-row"><Button asChild><Link href="/"><ArrowLeft /> Retour à l&apos;accueil</Link></Button><Button asChild variant="outline"><Link href="/portfolio">Voir le portfolio</Link></Button></div></div></div>
 }

@@ -1,7 +1,7 @@
 import Image from 'next/image'
 import Link from 'next/link'
-import { Wand2, MapPin, Phone } from 'lucide-react'
-import { buttonVariants } from '@heroui/styles'
+import { ArrowRight, MapPin, Phone, ScanLine, ShieldCheck } from 'lucide-react'
+import { Button } from '@/components/ui/button'
 import { HeroSection } from '@/components/hero-section'
 import { PortfolioGallery } from '@/components/portfolio-gallery'
 import { StudioSection } from '@/components/studio-section'
@@ -15,114 +15,13 @@ export default function HomePage() {
   return (
     <div>
       <HeroSection />
-
-      <div className="section-divider" aria-hidden="true" />
-
-      <section className="py-24 lg:py-32 bg-background">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <SectionHeader
-            eyebrow="Réalisations"
-            title="Un aperçu du portfolio"
-            description="Chaque tatouage raconte une histoire. Découvrez une sélection de réalisations dans différents styles, du réalisme à la fineline."
-          />
-          <PortfolioGallery variant="teaser" limit={6} />
-        </div>
-      </section>
-
-      <div className="section-divider" aria-hidden="true" />
-
-      <section id="salon" className="py-24 lg:py-32 bg-surface">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <SectionHeader eyebrow="Le studio" title="18 ans de passion & d'expertise" />
-          <StudioSection variant="teaser" />
-          <div className="mt-10 text-center">
-            <Link href="/studio" className={buttonVariants({ variant: 'outline', size: 'md' })}>
-              Découvrir le studio et Olivier
-            </Link>
-          </div>
-        </div>
-      </section>
-
-      <div className="section-divider" aria-hidden="true" />
-
-      <section className="py-24 lg:py-32 bg-background">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <Reveal className="grid lg:grid-cols-2 gap-12 items-center bg-card border border-border p-8 lg:p-12">
-            <div>
-              <div className="flex items-center gap-3 mb-4">
-                <div className="h-px w-12 bg-gold opacity-70" aria-hidden="true" />
-                <span className="text-gold text-xs tracking-[0.3em] uppercase font-medium">Outil interactif</span>
-              </div>
-              <h2 className="font-serif text-3xl lg:text-4xl font-bold text-foreground mb-4 text-balance">
-                Essayez votre tatouage avant de vous lancer
-              </h2>
-              <p className="text-muted-foreground text-lg leading-relaxed mb-8 max-w-xl">
-                Importez une photo de votre corps et le motif souhaité pour visualiser le rendu en temps réel —
-                déplacez, redimensionnez et ajustez librement avant votre rendez-vous.
-              </p>
-              <Link href="/essai-virtuel" className={buttonVariants({ variant: 'primary', size: 'lg' })}>
-                <Wand2 size={16} aria-hidden="true" />
-                Essayer maintenant
-              </Link>
-            </div>
-            <div className="relative aspect-video lg:aspect-square overflow-hidden">
-              <Image
-                src="/images/portfolio-3.png"
-                alt="Aperçu de l'outil d'essayage virtuel de tatouage"
-                fill
-                className="object-cover"
-                sizes="(max-width: 1024px) 100vw, 50vw"
-              />
-            </div>
-          </Reveal>
-        </div>
-      </section>
-
-      <div className="section-divider" aria-hidden="true" />
-
-      <section id="avis" className="py-24 lg:py-32 bg-surface">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <SectionHeader eyebrow="Témoignages" title="Ce que disent nos clients" align="center" />
-          <ReviewsSection limit={3} />
-        </div>
-      </section>
-
-      <div className="section-divider" aria-hidden="true" />
-
-      <section className="py-24 lg:py-32 bg-background">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <SectionHeader eyebrow="Questions fréquentes" title="Avant de nous contacter" align="center" />
-          <FaqSection />
-        </div>
-      </section>
-
-      <div className="section-divider" aria-hidden="true" />
-
-      <section className="py-24 lg:py-32 bg-surface">
-        <Reveal className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h2 className="font-serif text-4xl lg:text-5xl font-bold text-foreground mb-6 text-balance">
-            Parlons de votre projet
-          </h2>
-          <p className="text-muted-foreground text-lg leading-relaxed mb-10 max-w-2xl mx-auto">
-            Décrivez votre idée et Olivier vous recontacte pour convenir d&apos;un rendez-vous.
-          </p>
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-10">
-            <Link href="/rendez-vous" className={buttonVariants({ variant: 'primary', size: 'lg' })}>
-              Prendre rendez-vous
-            </Link>
-            <a href={`tel:${siteConfig.phone}`} className={buttonVariants({ variant: 'outline', size: 'lg' })}>
-              <Phone size={16} aria-hidden="true" />
-              {siteConfig.phoneDisplay}
-            </a>
-          </div>
-          <div className="flex items-center justify-center gap-2 text-muted-foreground text-sm">
-            <MapPin size={14} className="text-gold flex-shrink-0" aria-hidden="true" />
-            <span>
-              {siteConfig.address.street}, {siteConfig.address.postalCode} {siteConfig.address.city}
-            </span>
-          </div>
-        </Reveal>
-      </section>
+      <section className="section-space relative overflow-hidden"><div className="absolute left-0 top-1/3 size-80 rounded-full bg-primary/8 blur-[100px]" aria-hidden="true" /><div className="container-shell relative"><SectionHeader eyebrow="Sélection d'œuvres" title="Chaque pièce raconte une histoire unique" description="Découvrez une sélection de projets en réalisme, fineline, couleur et cover, dessinés pour la morphologie et l'histoire de chaque client." /><PortfolioGallery variant="teaser" limit={6} /></div></section>
+      <div className="section-divider" />
+      <section id="salon" className="section-space bg-surface/55"><div className="container-shell"><SectionHeader eyebrow="À propos du studio" title="18 ans d'expérience, sans jamais se répéter" /><StudioSection variant="teaser" /><Reveal className="mt-12 text-center"><Button asChild variant="outline" size="lg"><Link href="/studio">Découvrir le studio <ArrowRight /></Link></Button></Reveal></div></section>
+      <section className="section-space relative overflow-hidden"><div className="absolute right-0 top-1/4 size-[28rem] rounded-full bg-wine/20 blur-[120px]" aria-hidden="true" /><div className="container-shell relative"><Reveal className="glow-wine grid overflow-hidden rounded-3xl border border-white/10 bg-card/75 lg:grid-cols-2"><div className="flex flex-col justify-center p-7 sm:p-10 lg:p-14"><span className="eyebrow mb-5">Outil interactif</span><h2 className="text-balance text-3xl font-black leading-tight tracking-[-0.03em] sm:text-4xl">Visualisez votre tatouage avant de vous lancer</h2><p className="mt-5 max-w-xl text-base leading-8 text-muted-foreground">Importez votre photo et le motif souhaité, puis ajustez sa position, sa taille, son angle et son intensité avant d&apos;enregistrer l&apos;aperçu.</p><div className="mt-8 flex flex-wrap gap-3"><Button asChild size="lg"><Link href="/essai-virtuel"><ScanLine /> Commencer l&apos;essayage</Link></Button><span className="inline-flex items-center gap-2 px-2 text-xs text-muted-foreground"><ShieldCheck className="size-4 text-primary" /> Vos images restent privées</span></div></div><div className="relative min-h-[24rem] lg:min-h-[32rem]"><Image src="/images/portfolio-3.png" alt="Aperçu de l'outil d'essayage virtuel" fill className="object-cover" sizes="(max-width: 1024px) 100vw, 50vw" /><div className="absolute inset-0 bg-gradient-to-t from-background/55 via-transparent to-transparent lg:bg-gradient-to-r" /></div></Reveal></div></section>
+      <section id="avis" className="section-space border-y border-white/10 bg-surface/60"><div className="container-shell"><SectionHeader eyebrow="Expériences clients" title="Une confiance construite projet après projet" align="center" /><ReviewsSection limit={3} /></div></section>
+      <section className="section-space"><div className="container-shell"><SectionHeader eyebrow="Questions fréquentes" title="Tout savoir avant de commencer" align="center" /><FaqSection /></div></section>
+      <section className="pb-20 sm:pb-24 lg:pb-32"><div className="container-shell"><Reveal className="relative overflow-hidden rounded-3xl border border-primary/20 bg-[linear-gradient(135deg,rgba(118,31,45,.38),rgba(19,16,16,.9)_55%,rgba(214,173,106,.12))] px-6 py-14 text-center shadow-[0_30px_100px_-45px_rgba(118,31,45,.9)] sm:px-10 lg:py-20"><div className="ambient-grid absolute inset-0 opacity-40" /><div className="relative"><span className="eyebrow mb-5">Votre prochain projet</span><h2 className="text-balance text-3xl font-black tracking-[-0.035em] sm:text-4xl lg:text-5xl">Une idée en tête ? Parlons-en.</h2><p className="mx-auto mt-5 max-w-2xl text-base leading-8 text-muted-foreground">Partagez votre histoire et vos inspirations avec Olivier pour commencer ensemble le travail de création.</p><div className="mt-8 flex flex-col justify-center gap-3 sm:flex-row"><Button asChild size="lg"><Link href="/rendez-vous">Demander un rendez-vous <ArrowRight /></Link></Button><Button asChild variant="outline" size="lg"><a href={`tel:${siteConfig.phone}`}><Phone />{siteConfig.phoneDisplay}</a></Button></div><div className="mt-7 inline-flex items-center gap-2 text-xs text-muted-foreground"><MapPin className="size-4 text-primary" />{siteConfig.address.street}, {siteConfig.address.city}</div></div></Reveal></div></section>
     </div>
   )
 }

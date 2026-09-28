@@ -1,209 +1,135 @@
-@import 'tailwindcss';
-@import '@heroui/styles';
-@import 'tw-animate-css';
+@import "tailwindcss";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
 
 @custom-variant dark (&:is(.dark *));
 
 @theme inline {
-  /* Tattoo Lounge Design Tokens */
-  --font-sans: 'Inter', 'Inter Fallback', sans-serif;
-  --font-serif: 'Playfair Display', 'Playfair Display Fallback', serif;
-
-  /*
-   * Bridge Tailwind's utility color names (bg-primary, text-muted-foreground, …)
-   * onto the same variables HeroUI components read (--accent, --surface, --default, …)
-   * so hand-authored layout classes and HeroUI components share one palette.
-   */
+  --font-sans: var(--font-inter);
+  --font-heading: var(--font-playfair);
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --color-card: var(--surface);
-  --color-card-foreground: var(--surface-foreground);
-  --color-popover: var(--overlay);
-  --color-popover-foreground: var(--overlay-foreground);
-  --color-primary: var(--accent);
-  --color-primary-foreground: var(--accent-foreground);
-  --color-secondary: var(--default);
-  --color-secondary-foreground: var(--default-foreground);
-  --color-muted: var(--surface-secondary);
-  --color-muted-foreground: var(--muted);
-  --color-accent: var(--gold);
-  --color-accent-foreground: var(--gold-foreground);
-  --color-destructive: var(--danger);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
   --color-border: var(--border);
-  --color-input: var(--field-background);
-  --color-ring: var(--focus);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
   --color-gold: var(--gold);
-  --color-gold-foreground: var(--gold-foreground);
+  --color-wine: var(--wine);
   --color-surface: var(--surface);
-
-  /* Radius scale (--radius-xs … --radius-4xl) is derived from --radius by @heroui/styles */
+  --radius-sm: calc(var(--radius) - 6px);
+  --radius-md: calc(var(--radius) - 3px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+  --radius-2xl: calc(var(--radius) + 10px);
+  --radius-3xl: calc(var(--radius) + 18px);
+  --radius-4xl: calc(var(--radius) + 26px);
 }
 
-/* Tattoo Lounge is always dark — the studio's identity, not a user preference */
 :root,
 .dark {
   color-scheme: dark;
-
-  --background: #0a0a0a;
-  --foreground: #f0ebe0;
-
-  --surface: #121212;
-  --surface-foreground: #f0ebe0;
-  --surface-secondary: #1a1a1a;
-  --surface-secondary-foreground: #f0ebe0;
-  --surface-tertiary: #232323;
-  --surface-tertiary-foreground: #f0ebe0;
-
-  --overlay: #141414;
-  --overlay-foreground: #f0ebe0;
-
-  --default: #1f1f1f;
-  --default-foreground: #f0ebe0;
-
-  --muted: #8a8070;
-
-  --border: rgba(255, 255, 255, 0.1);
-  --separator: rgba(255, 255, 255, 0.08);
-  --backdrop: rgba(5, 4, 3, 0.8);
-
-  /* Brand: deep crimson drives every solid/interactive HeroUI surface */
-  --accent: #8b1a1a;
-  --accent-foreground: #f5efe6;
-
-  /* Brand: aged gold is the editorial highlight — eyebrows, dividers, focus */
-  --gold: #c9a84c;
-  --gold-foreground: #0a0a0a;
-
-  --danger: #a3372e;
-  --danger-foreground: #f5efe6;
-  --success: #5c8a52;
-  --success-foreground: #f5efe6;
-  --warning: #c9a84c;
-  --warning-foreground: #0a0a0a;
-
-  --field-background: #141414;
-  --field-foreground: #f0ebe0;
-  --field-placeholder: color-mix(in oklab, #f0ebe0 45%, transparent);
-  --field-border: var(--border);
-  --field-border-width: 1px;
-
-  --segment: #1a1a1a;
-  --segment-foreground: #f0ebe0;
-
-  --focus: var(--gold);
-  --link: var(--gold);
-
-  /* Small, deliberate radius — refined editorial, not sharp, not a rounded SaaS bubble */
-  --radius: 0.375rem;
-
-  --glow-accent: 0 0 0 1px color-mix(in oklab, var(--accent) 60%, transparent), 0 8px 24px -8px color-mix(in oklab, var(--accent) 70%, transparent);
-  --glow-gold: 0 0 24px -4px color-mix(in oklab, var(--gold) 45%, transparent);
+  --background: #090707;
+  --foreground: #fbf7ef;
+  --card: #131010;
+  --card-foreground: #fbf7ef;
+  --popover: #181313;
+  --popover-foreground: #fbf7ef;
+  --primary: #d6ad6a;
+  --primary-foreground: #120d08;
+  --secondary: #211a1a;
+  --secondary-foreground: #f5eee2;
+  --muted: #1b1717;
+  --muted-foreground: #b8aca0;
+  --accent: #32171b;
+  --accent-foreground: #f8e9db;
+  --destructive: #d05858;
+  --border: rgba(255, 245, 229, 0.12);
+  --input: rgba(255, 245, 229, 0.08);
+  --ring: #d6ad6a;
+  --gold: #d6ad6a;
+  --wine: #761f2d;
+  --surface: #100d0d;
+  --radius: 1rem;
 }
 
 @layer base {
   * {
     @apply border-border outline-ring/50;
   }
-  body {
-    @apply bg-background text-foreground font-sans;
-  }
   html {
     scroll-behavior: smooth;
+    background: var(--background);
+  }
+  body {
+    @apply bg-background text-foreground antialiased;
+    min-height: 100vh;
+    background-image:
+      radial-gradient(circle at 85% -10%, rgba(118, 31, 45, 0.22), transparent 32rem),
+      radial-gradient(circle at 10% 40%, rgba(214, 173, 106, 0.06), transparent 26rem);
+  }
+  h1,
+  h2,
+  h3 {
+    font-family: var(--font-playfair), Georgia, serif;
+  }
+  ::selection {
+    color: var(--foreground);
+    background: rgba(118, 31, 45, 0.8);
+  }
+  button,
+  a {
+    -webkit-tap-highlight-color: transparent;
   }
   @media (prefers-reduced-motion: reduce) {
-    html {
-      scroll-behavior: auto;
-    }
-    *,
-    *::before,
-    *::after {
+    html { scroll-behavior: auto; }
+    *, *::before, *::after {
       animation-duration: 0.01ms !important;
       animation-iteration-count: 1 !important;
       transition-duration: 0.01ms !important;
-      scroll-behavior: auto !important;
     }
   }
 }
 
-/* Utility classes */
 @layer utilities {
-  .font-display {
-    font-family: var(--font-serif);
-  }
-  .text-gold {
-    color: var(--gold);
-  }
-  .bg-gold {
-    background-color: var(--gold);
-  }
-  .border-gold {
-    border-color: var(--gold);
-  }
-  .text-crimson {
-    color: var(--accent);
-  }
-  .bg-crimson {
-    background-color: var(--accent);
-  }
-
-  /* Ink texture overlay */
-  .ink-texture {
-    position: relative;
-  }
-  .ink-texture::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
-    pointer-events: none;
-    z-index: 1;
-    opacity: 0.4;
-  }
-
-  .section-divider {
+  .container-shell { @apply mx-auto w-full max-w-7xl px-5 sm:px-8 lg:px-12; }
+  .section-space { @apply py-20 sm:py-24 lg:py-32; }
+  .surface-panel { @apply border border-white/10 bg-card/70 shadow-2xl shadow-black/20 backdrop-blur-xl; }
+  .eyebrow { @apply inline-flex items-center gap-2 text-[0.68rem] font-semibold tracking-[0.18em] text-gold; }
+  .eyebrow::before {
+    content: "";
+    width: 1.75rem;
     height: 1px;
-    background: linear-gradient(to right, transparent, rgba(201, 168, 76, 0.3), transparent);
+    background: linear-gradient(90deg, transparent, var(--gold));
   }
-
-  .media-frame {
-    border-radius: var(--radius-lg);
-    overflow: hidden;
+  .text-balance { text-wrap: balance; }
+  .glow-gold { box-shadow: 0 0 0 1px rgba(214, 173, 106, 0.2), 0 20px 70px -28px rgba(214, 173, 106, 0.55); }
+  .glow-wine { box-shadow: 0 0 0 1px rgba(118, 31, 45, 0.28), 0 28px 90px -32px rgba(118, 31, 45, 0.8); }
+  .ambient-grid {
+    background-image:
+      linear-gradient(rgba(255, 255, 255, 0.025) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255, 255, 255, 0.025) 1px, transparent 1px);
+    background-size: 56px 56px;
+    mask-image: linear-gradient(to bottom, black, transparent 85%);
   }
-
-  /* Every hand-authored bordered box uses the border-border utility — round them
-     all consistently instead of hunting each one down individually. */
-  .border-border {
-    border-radius: var(--radius-md);
-  }
-
-  .spotlight {
-    position: relative;
-    isolation: isolate;
-  }
-  .spotlight::before {
-    content: '';
-    position: absolute;
-    inset: -20% -10% auto -10%;
-    height: 70%;
-    z-index: -1;
-    background: radial-gradient(60% 60% at 50% 0%, color-mix(in oklab, var(--accent) 22%, transparent), transparent 70%);
-    pointer-events: none;
-  }
+  .section-divider { height: 1px; background: linear-gradient(90deg, transparent, rgba(214, 173, 106, 0.35), transparent); }
+  .media-frame { @apply overflow-hidden rounded-2xl border border-white/10 bg-muted; }
+  .legal-copy h2 { @apply mb-3 text-xl font-bold text-foreground; }
+  .legal-copy > div { @apply rounded-2xl border border-white/10 bg-card/50 p-6 sm:p-8; }
 }
 
-/* Primary buttons get a subtle crimson glow — transform/opacity only, per interface guidelines */
-.button--primary {
-  box-shadow: var(--glow-accent);
-  transition:
-    transform 150ms var(--ease-out, ease),
-    box-shadow 200ms var(--ease-out, ease);
-}
-.button--primary:hover {
-  transform: translateY(-1px);
-}
-@media (prefers-reduced-motion: reduce) {
-  .button--primary:hover {
-    transform: none;
-  }
-}
-
+input[type="range"] { accent-color: var(--gold); }
+::-webkit-scrollbar { width: 10px; }
+::-webkit-scrollbar-track { background: var(--background); }
+::-webkit-scrollbar-thumb { border: 3px solid var(--background); border-radius: 999px; background: rgba(214, 173, 106, 0.4); }

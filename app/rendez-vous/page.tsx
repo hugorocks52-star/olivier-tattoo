@@ -3,35 +3,8 @@ import { PageHeader } from '@/components/page-header'
 import { BookingForm } from '@/components/booking-form'
 import { breadcrumbSchema } from '@/lib/schema'
 
-export const metadata: Metadata = {
-  title: 'Prendre rendez-vous',
-  description:
-    'Demandez un rendez-vous ou un projet de tatouage à Tattoo Lounge, Auvers-sur-Oise. Olivier vous recontacte pour échanger sur votre idée.',
-  alternates: { canonical: '/rendez-vous' },
-}
+export const metadata: Metadata = { title: 'Prendre rendez-vous', description: 'Présentez votre projet à Tattoo Lounge. Olivier vous recontacte pour parler du dessin, du budget et des disponibilités.', alternates: { canonical: '/rendez-vous' } }
 
-export default function RendezVousPage() {
-  return (
-    <div>
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{
-          __html: JSON.stringify(
-            breadcrumbSchema([{ name: 'Accueil', path: '/' }, { name: 'Prendre rendez-vous', path: '/rendez-vous' }])
-          ),
-        }}
-      />
-      <PageHeader
-        eyebrow="Projet"
-        title="Parlez-moi de votre projet"
-        description="Remplissez ce formulaire pour présenter votre projet à Olivier. Il vous recontactera dans les meilleurs délais pour valider votre demande et convenir d'un rendez-vous."
-        breadcrumb="Prendre rendez-vous"
-      />
-      <section className="py-16 lg:py-24 bg-background">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-          <BookingForm />
-        </div>
-      </section>
-    </div>
-  )
+export default function BookingPage() {
+  return <div><script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema([{ name: 'Accueil', path: '/' }, { name: 'Prendre rendez-vous', path: '/rendez-vous' }])) }} /><PageHeader eyebrow="Démarrer un projet" title="Tout commence par votre idée" description="Présentez votre projet avec le plus de détails possible. Olivier vous recontactera pour discuter du dessin, du budget et du meilleur moment pour la séance." breadcrumb="Prendre rendez-vous" /><section className="section-space"><div className="container-shell max-w-5xl"><BookingForm /></div></section></div>
 }

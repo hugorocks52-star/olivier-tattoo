@@ -1,9 +1,5 @@
-import { Spinner } from '@heroui/react'
+import { LoaderCircle } from 'lucide-react'
 
 export default function Loading() {
-  return (
-    <div className="min-h-[60vh] flex items-center justify-center">
-      <Spinner aria-label="Chargement" />
-    </div>
-  )
+  return <div className="flex min-h-[65vh] items-center justify-center"><div className="flex items-center gap-3 text-sm text-muted-foreground"><LoaderCircle className="size-5 animate-spin text-primary" /> Chargement en cours</div></div>
 }

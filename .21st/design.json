@@ -225,7 +225,10 @@
     "must": [],
     "avoid": []
   },
-  "decisions": [],
+  "decisions": [
+    "French LTR interface using Inter and Playfair Display, warm ivory text, aged-gold actions, deep-wine ambient glows, restrained glass surfaces, and rounded editorial media.",
+    "Use shadcn Radix primitives for all interactive UI; reserve glow effects for primary actions, hero atmosphere, and conversion-critical panels."
+  ],
   "evidence": [
     {
       "fact": "design.colorMode:light-and-dark",
